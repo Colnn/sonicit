@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.0-SNAPSHOT.SonicIt.main.iml" filepath="$PROJECT_DIR$/.idea/modules/1.0-SNAPSHOT.SonicIt.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1.0-SNAPSHOT.SonicIt.test.iml" filepath="$PROJECT_DIR$/.idea/modules/1.0-SNAPSHOT.SonicIt.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SonicIt.iml" filepath="$PROJECT_DIR$/.idea/modules/SonicIt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SonicIt.main.iml" filepath="$PROJECT_DIR$/.idea/modules/SonicIt.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SonicIt.test.iml" filepath="$PROJECT_DIR$/.idea/modules/SonicIt.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Websites.SonicIt.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Websites.SonicIt.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Websites.SonicIt.test.iml" filepath="$PROJECT_DIR$/.idea/modules/Websites.SonicIt.test.iml" />
+    </modules>
+  </component>
+</project>

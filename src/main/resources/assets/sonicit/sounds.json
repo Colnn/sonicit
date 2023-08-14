@@ -1,0 +1,20 @@
+{
+  "sonic": {
+    "category" : "player",
+    "sounds": [
+      {
+        "name": "sonicit:sonic",
+        "stream": false
+      }
+    ]
+  },
+  "theme": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "sonicit:doctor-who-theme",
+        "stream": true
+      }
+    ]
+  }
+}

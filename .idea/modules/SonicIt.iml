@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="SonicIt" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="1.0-SNAPSHOT" external.system.module.version="dev.coln" type="JAVA_MODULE" version="4">
+  <component name="AdditionalModuleElements">
+    <content url="file://$MODULE_DIR$/../.." dumb="true">
+      <excludeFolder url="file://$MODULE_DIR$/../../run/defaultconfigs" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/mods" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/resourcepacks" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/saves/New World/datapacks" />
+    </content>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../..">
+      <excludeFolder url="file://$MODULE_DIR$/../../.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/defaultconfigs" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/mods" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/resourcepacks" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/saves/New World/datapacks" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/defaultconfigs" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/mods" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/resourcepacks" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/saves/New World/datapacks" />
+      <excludeFolder url="file://$MODULE_DIR$/../../run/saves" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
