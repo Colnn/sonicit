@@ -82,6 +82,7 @@ public class SonicScrewdriverItem extends Item {
                     affected += 1;
                 } else if (block1 == Blocks.JUKEBOX) {
                     JukeboxBlock jukeboxBlock = (JukeboxBlock) block1;
+                    jukeboxBlock.setRecord(player, level, blockPos, blockState1, new ItemStack(ItemInit.DWHO_THEME.get()));
                     level.levelEvent((Player)null, 1010, blockPos, Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
                 }
             }
@@ -124,6 +125,7 @@ public class SonicScrewdriverItem extends Item {
                     context.getLevel().playSound(player, context.getPlayer().blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
                 } else if (block == Blocks.JUKEBOX) {
                     JukeboxBlock jukeboxBlock = (JukeboxBlock) block;
+                    jukeboxBlock.setRecord(context.getPlayer(), context.getLevel(), context.getClickedPos(), blockState, new ItemStack(ItemInit.DWHO_THEME.get()));
                     context.getLevel().levelEvent((Player)null, 1010, context.getClickedPos(), Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
                 }
             }
