@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     " # ",
-    " $ ",
-    " / "
+    "/$/",
+    "///"
   ],
   "key": {
     "#": {
@@ -17,6 +17,6 @@
     }
   },
   "result": {
-    "item": "sonicit:sonic_screwdriver"
+    "item": "sonicit:10_screwdriver"
   }
 }
