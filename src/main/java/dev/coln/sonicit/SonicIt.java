@@ -4,6 +4,8 @@ import com.mojang.logging.LogUtils;
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.init.SoundInit;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,6 +27,19 @@ public class SonicIt {
     public static final String MOD_ID = "sonicit";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
+
+    public static class ModCreativeTab extends CreativeModeTab {
+        private ModCreativeTab(int index, String label) {
+            super(index, label);
+        }
+
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ItemInit.TEN_SCREWDRIVER_EXTENDED.get());
+        }
+
+        public static final ModCreativeTab instance = new ModCreativeTab(CreativeModeTab.TABS.length, "sonicit");
+    }
 
     public SonicIt() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
