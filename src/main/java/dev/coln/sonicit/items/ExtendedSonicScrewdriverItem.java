@@ -42,6 +42,8 @@ public class ExtendedSonicScrewdriverItem extends Item {
         if(hand != InteractionHand.MAIN_HAND) {
             return super.use(level, player, hand);
         }
+        this.modes[0] = "Basic";
+        this.modes[1] = "Ranged";
         CompoundTag sonicNBT = player.getItemInHand(hand).getTag();
         if(sonicNBT == null) {
             player.getItemInHand(hand).setTag(new CompoundTag());
@@ -68,6 +70,7 @@ public class ExtendedSonicScrewdriverItem extends Item {
             } else {
                 mode += 1;
             }
+            sonicNBT.putInt("mode", mode);
             player.displayClientMessage(Component.literal("Current: " + modes[mode-1]), true);
             return super.use(level, player, hand);
         } else {
@@ -101,9 +104,7 @@ public class ExtendedSonicScrewdriverItem extends Item {
                     }
                 }
             } else {
-                if(mode == 1) {
-                    ModMessages.sendToServer(new BasicSonicC2SPacket());
-                } else if(mode == 2) {
+                if(mode == 2) {
                     ModMessages.sendToServer(new RangedSonicC2SPacket());
                 }
             }
@@ -152,8 +153,6 @@ public class ExtendedSonicScrewdriverItem extends Item {
         } else {
             if(mode == 1) {
                 ModMessages.sendToServer(new BasicSonicC2SPacket());
-            } else if(mode == 2) {
-                ModMessages.sendToServer(new RangedSonicC2SPacket());
             }
         }
         return super.useOn(context);
