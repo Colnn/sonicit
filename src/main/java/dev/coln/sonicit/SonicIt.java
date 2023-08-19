@@ -3,6 +3,7 @@ package dev.coln.sonicit;
 import com.mojang.logging.LogUtils;
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.init.SoundInit;
+import dev.coln.sonicit.networking.ModMessages;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -49,6 +50,8 @@ public class SonicIt {
 
         ItemInit.ITEMS.register(modEventBus);
         SoundInit.SOUND_EVENTS.register(modEventBus);
+
+        ModMessages.register();
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

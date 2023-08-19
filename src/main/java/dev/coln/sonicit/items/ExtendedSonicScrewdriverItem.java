@@ -2,6 +2,9 @@ package dev.coln.sonicit.items;
 
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.init.SoundInit;
+import dev.coln.sonicit.networking.ModMessages;
+import dev.coln.sonicit.networking.packet.BasicSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.RangedSonicC2SPacket;
 import dev.coln.sonicit.util.KeyboardHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -30,6 +33,8 @@ import java.util.List;
 public class ExtendedSonicScrewdriverItem extends Item {
     String[] modes = new String[2];
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
+
+
     public ExtendedSonicScrewdriverItem(Item.Properties properties) { super(properties); }
 
     @Override
@@ -37,8 +42,6 @@ public class ExtendedSonicScrewdriverItem extends Item {
         if(hand != InteractionHand.MAIN_HAND) {
             return super.use(level, player, hand);
         }
-        this.modes[0] = "Basic";
-        this.modes[1] = "Ranged";
         CompoundTag sonicNBT = player.getItemInHand(hand).getTag();
         if(sonicNBT == null) {
             player.getItemInHand(hand).setTag(new CompoundTag());
@@ -58,8 +61,7 @@ public class ExtendedSonicScrewdriverItem extends Item {
             itemStack.setTag(player.getItemInHand(hand).getTag());
             player.setItemInHand(hand, itemStack);
             return super.use(level, player, hand);
-        }
-        if(KeyboardHelper.isHoldingShift()){
+        } else if(KeyboardHelper.isHoldingShift()){
             player.getCooldowns().addCooldown(this, 3);
             if(mode >= modes.length) {
                 mode = 1;
@@ -67,37 +69,45 @@ public class ExtendedSonicScrewdriverItem extends Item {
                 mode += 1;
             }
             player.displayClientMessage(Component.literal("Current: " + modes[mode-1]), true);
-        }  else if(mode == 2) {
-            int RANGE = 5;
-            List<BlockPos> blockPosList = BlockPos.betweenClosedStream(player.blockPosition().getX() - RANGE, player.blockPosition().getY() - RANGE, player.blockPosition().getZ() - RANGE, player.blockPosition().getX() + RANGE, player.blockPosition().getY() + RANGE, player.blockPosition().getZ() + RANGE).map(BlockPos::immutable).toList();
-            player.getCooldowns().addCooldown(this, 40);
-            RandomSource randomSource = RandomSource.create();
-            float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
-            level.playSound(player, player.blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
-            for (BlockPos blockPos : blockPosList) {
-                BlockState blockState1 = level.getBlockState(blockPos);
-                Block block1 = blockState1.getBlock();
-                if(block1 == Blocks.TNT) {
-                    TntBlock tntBlock = (TntBlock) block1;
-                    tntBlock.onCaughtFire(blockState1, level, blockPos, null, null);
-                    level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 1);
-                    affected += 1;
-                } else if (block1 == Blocks.REDSTONE_LAMP) {
-                    level.setBlock(blockPos, blockState1.cycle(LIT) ,2);
-                    affected += 1;
-                } else if (block1 == Blocks.LIGHTNING_ROD) {
-                    LightningRodBlock lightningRodBlock = (LightningRodBlock) block1;
-                    lightningRodBlock.onLightningStrike(blockState1, level, blockPos);
-                    affected += 1;
-                } else if (block1 == Blocks.JUKEBOX) {
-                    JukeboxBlock jukeboxBlock = (JukeboxBlock) block1;
-                    jukeboxBlock.setRecord(player, level, blockPos, blockState1, new ItemStack(ItemInit.DWHO_THEME.get()));
-                    level.levelEvent((Player)null, 1010, blockPos, Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
+            return super.use(level, player, hand);
+        } else {
+            if(level.isClientSide()) {
+                if(mode == 2) {
+                    int RANGE = 5;
+                    List<BlockPos> blockPosList = BlockPos.betweenClosedStream(player.blockPosition().getX() - RANGE, player.blockPosition().getY() - RANGE, player.blockPosition().getZ() - RANGE, player.blockPosition().getX() + RANGE, player.blockPosition().getY() + RANGE, player.blockPosition().getZ() + RANGE).map(BlockPos::immutable).toList();
+                    player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 40);
+                    RandomSource randomSource = RandomSource.create();
+                    float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
+                    level.playSound(player, player.blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+                    for (BlockPos blockPos : blockPosList) {
+                        BlockState blockState = level.getBlockState(blockPos);
+                        Block block = blockState.getBlock();
+                        if (block == Blocks.TNT) {
+                            TntBlock tntBlock = (TntBlock) block;
+                            tntBlock.onCaughtFire(blockState, level, blockPos, null, null);
+                            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 0);
+                            player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
+                            level.playSound(player, blockPos, SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+                        } else if (block == Blocks.REDSTONE_LAMP) {
+                            level.setBlock(blockPos, blockState.cycle(LIT), 2);
+                            player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
+                            level.playSound(player, blockPos, SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+                        } else if (block == Blocks.JUKEBOX) {
+                            JukeboxBlock jukeboxBlock = (JukeboxBlock) block;
+                            jukeboxBlock.setRecord(player, level, blockPos, blockState, new ItemStack(ItemInit.DWHO_THEME.get()));
+                            level.levelEvent((Player) null, 1010, blockPos, Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
+                            player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
+                        }
+                    }
+                }
+            } else {
+                if(mode == 1) {
+                    ModMessages.sendToServer(new BasicSonicC2SPacket());
+                } else if(mode == 2) {
+                    ModMessages.sendToServer(new RangedSonicC2SPacket());
                 }
             }
-            player.displayClientMessage(Component.literal(ChatFormatting.GREEN + "Affected " + affected + " blocks."), true);
         }
-        sonicNBT.putInt("mode", mode);
         return super.use(level, player, hand);
     }
 
@@ -114,29 +124,36 @@ public class ExtendedSonicScrewdriverItem extends Item {
         }
         int mode = sonicNBT.getInt("mode");
         Player player = context.getPlayer();
-        BlockState blockState = context.getLevel().getBlockState(context.getClickedPos());
+        Level level = player.getLevel();
+        BlockState blockState = level.getBlockState(context.getClickedPos());
         Block block = blockState.getBlock();
 
-        RandomSource randomSource = RandomSource.create();
-        float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
-
-        if(!KeyboardHelper.isHoldingShift()) {
+        if(level.isClientSide()) {
             if(mode == 1) {
+                RandomSource randomSource = RandomSource.create();
+                float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
                 if (block == Blocks.TNT) {
                     TntBlock tntBlock = (TntBlock) block;
-                    tntBlock.onCaughtFire(blockState, context.getLevel(), context.getClickedPos(), null, null);
-                    context.getLevel().setBlock(context.getClickedPos(), Blocks.AIR.defaultBlockState(), 0);
-                    player.getCooldowns().addCooldown(this, 20);
-                    context.getLevel().playSound(player, context.getPlayer().blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+                    tntBlock.onCaughtFire(blockState, level, context.getClickedPos(), null, null);
+                    level.setBlock(context.getClickedPos(), Blocks.AIR.defaultBlockState(), 0);
+                    player.getCooldowns().addCooldown(player.getItemInHand(InteractionHand.MAIN_HAND).getItem(), 20);
+                    level.playSound(player, context.getClickedPos(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
                 } else if (block == Blocks.REDSTONE_LAMP) {
-                    context.getLevel().setBlock(context.getClickedPos(), blockState.cycle(LIT), 2);
-                    player.getCooldowns().addCooldown(this, 20);
-                    context.getLevel().playSound(player, context.getPlayer().blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+                    level.setBlock(context.getClickedPos(), blockState.cycle(LIT), 2);
+                    player.getCooldowns().addCooldown(player.getItemInHand(InteractionHand.MAIN_HAND).getItem(), 20);
+                    level.playSound(player, context.getClickedPos(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
                 } else if (block == Blocks.JUKEBOX) {
                     JukeboxBlock jukeboxBlock = (JukeboxBlock) block;
-                    jukeboxBlock.setRecord(context.getPlayer(), context.getLevel(), context.getClickedPos(), blockState, new ItemStack(ItemInit.DWHO_THEME.get()));
-                    context.getLevel().levelEvent((Player)null, 1010, context.getClickedPos(), Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
+                    jukeboxBlock.setRecord(player, level, context.getClickedPos(), blockState, new ItemStack(ItemInit.DWHO_THEME.get()));
+                    level.levelEvent((Player)null, 1010, context.getClickedPos(), Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
+                    player.getCooldowns().addCooldown(player.getItemInHand(InteractionHand.MAIN_HAND).getItem(), 20);
                 }
+            }
+        } else {
+            if(mode == 1) {
+                ModMessages.sendToServer(new BasicSonicC2SPacket());
+            } else if(mode == 2) {
+                ModMessages.sendToServer(new RangedSonicC2SPacket());
             }
         }
         return super.useOn(context);
