@@ -1,19 +1,14 @@
 package dev.coln.sonicit.items;
 
-import dev.coln.sonicit.init.ItemInit;
-import dev.coln.sonicit.init.SoundInit;
 import dev.coln.sonicit.networking.ModMessages;
 import dev.coln.sonicit.networking.packet.BasicSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.ExtendSonicC2SPacket;
 import dev.coln.sonicit.networking.packet.RangedSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.SwitchSonicC2SPacket;
 import dev.coln.sonicit.util.KeyboardHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -23,12 +18,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.RedstoneTorchBlock;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -46,8 +39,6 @@ public class ExtendedSonicScrewdriverItem extends Item {
         if(hand != InteractionHand.MAIN_HAND) {
             return super.use(level, player, hand);
         }
-        this.modes[0] = "Basic";
-        this.modes[1] = "Ranged";
         CompoundTag sonicNBT = player.getItemInHand(hand).getTag();
         if(sonicNBT == null) {
             player.getItemInHand(hand).setTag(new CompoundTag());
@@ -55,27 +46,12 @@ public class ExtendedSonicScrewdriverItem extends Item {
             sonicNBT.putInt("mode", 1);
         }
         int mode = sonicNBT.getInt("mode");
-        int affected = 0;
+
         if(KeyboardHelper.isHoldingControl()) {
-            Item newItem = null;
-            if(player.getItemInHand(hand).is(ItemInit.TEN_SCREWDRIVER_EXTENDED.get())) {
-                newItem = ItemInit.TEN_SCREWDRIVER.get();
-            } else if(player.getItemInHand(hand).is(ItemInit.ELEVEN_SCREWDRIVER_EXTENDED.get())) {
-                newItem = ItemInit.ELEVEN_SCREWDRIVER.get();
-            }
-            ItemStack itemStack = new ItemStack(newItem);
-            itemStack.setTag(player.getItemInHand(hand).getTag());
-            player.setItemInHand(hand, itemStack);
+            ModMessages.sendToServer(new ExtendSonicC2SPacket());
             return super.use(level, player, hand);
         } else if(KeyboardHelper.isHoldingShift()){
-            player.getCooldowns().addCooldown(this, 3);
-            if(mode >= modes.length) {
-                mode = 1;
-            } else {
-                mode += 1;
-            }
-            sonicNBT.putInt("mode", mode);
-            player.displayClientMessage(Component.literal("Current: " + modes[mode-1]), true);
+            ModMessages.sendToServer(new SwitchSonicC2SPacket());
             return super.use(level, player, hand);
         } else {
             if(mode == 2) {
@@ -107,6 +83,9 @@ public class ExtendedSonicScrewdriverItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         CompoundTag sonicNBT = stack.getTag();
+        this.modes[0] = "Basic";
+        this.modes[1] = "Ranged";
+
         if(sonicNBT == null) {
             tooltip.add(Component.literal( ChatFormatting.DARK_PURPLE + "Current mode: " + ChatFormatting.WHITE + "Basic"));
         }

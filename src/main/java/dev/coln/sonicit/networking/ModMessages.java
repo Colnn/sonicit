@@ -2,7 +2,9 @@ package dev.coln.sonicit.networking;
 
 import dev.coln.sonicit.SonicIt;
 import dev.coln.sonicit.networking.packet.BasicSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.ExtendSonicC2SPacket;
 import dev.coln.sonicit.networking.packet.RangedSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.SwitchSonicC2SPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -38,6 +40,18 @@ public class ModMessages {
                 .decoder(RangedSonicC2SPacket::new)
                 .encoder(RangedSonicC2SPacket::toBytes)
                 .consumerMainThread(RangedSonicC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(ExtendSonicC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ExtendSonicC2SPacket::new)
+                .encoder(ExtendSonicC2SPacket::toBytes)
+                .consumerMainThread(ExtendSonicC2SPacket::handle)
+                .add();
+
+        net.messageBuilder(SwitchSonicC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(SwitchSonicC2SPacket::new)
+                .encoder(SwitchSonicC2SPacket::toBytes)
+                .consumerMainThread(SwitchSonicC2SPacket::handle)
                 .add();
     }
 

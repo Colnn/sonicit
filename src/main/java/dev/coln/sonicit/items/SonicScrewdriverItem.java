@@ -2,6 +2,8 @@ package dev.coln.sonicit.items;
 
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.init.SoundInit;
+import dev.coln.sonicit.networking.ModMessages;
+import dev.coln.sonicit.networking.packet.ExtendSonicC2SPacket;
 import dev.coln.sonicit.util.KeyboardHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -40,15 +42,7 @@ public class SonicScrewdriverItem extends Item {
     @OnlyIn(Dist.CLIENT)
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if(KeyboardHelper.isHoldingControl()) {
-            Item newItem = null;
-            if(player.getItemInHand(hand).is(ItemInit.TEN_SCREWDRIVER.get())) {
-                newItem = ItemInit.TEN_SCREWDRIVER_EXTENDED.get();
-            } else if(player.getItemInHand(hand).is(ItemInit.ELEVEN_SCREWDRIVER.get())) {
-                newItem = ItemInit.ELEVEN_SCREWDRIVER_EXTENDED.get();
-            }
-            ItemStack itemStack = new ItemStack(newItem);
-            itemStack.setTag(player.getItemInHand(hand).getTag());
-            player.setItemInHand(hand, itemStack);
+            ModMessages.sendToServer(new ExtendSonicC2SPacket());
             return super.use(level, player, hand);
         }
         return super.use(level, player, hand);
