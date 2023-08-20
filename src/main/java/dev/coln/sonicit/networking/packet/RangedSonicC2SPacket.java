@@ -54,11 +54,10 @@ public class RangedSonicC2SPacket {
             player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 40);
             RandomSource randomSource = RandomSource.create();
             float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
-            level.playSound(player, player.blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+            ModMessages.sendToAllPlayers(new SonicSoundS2CPacket(player.blockPosition()));
             for (BlockPos blockPos : blockPosList) {
                 BlockState blockState1 = level.getBlockState(blockPos);
                 Block block1 = blockState1.getBlock();
-                ModMessages.sendToAllPlayers(new SonicSoundS2CPacket(blockPos));
                 if(block1 == Blocks.TNT) {
                     TntBlock tntBlock = (TntBlock) block1;
                     tntBlock.onCaughtFire(blockState1, level, blockPos, null, null);
