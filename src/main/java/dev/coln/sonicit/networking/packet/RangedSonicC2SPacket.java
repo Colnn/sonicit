@@ -2,6 +2,7 @@ package dev.coln.sonicit.networking.packet;
 
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.init.SoundInit;
+import dev.coln.sonicit.networking.ModMessages;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -57,6 +58,7 @@ public class RangedSonicC2SPacket {
             for (BlockPos blockPos : blockPosList) {
                 BlockState blockState1 = level.getBlockState(blockPos);
                 Block block1 = blockState1.getBlock();
+                ModMessages.sendToAllPlayers(new SonicSoundS2CPacket(blockPos));
                 if(block1 == Blocks.TNT) {
                     TntBlock tntBlock = (TntBlock) block1;
                     tntBlock.onCaughtFire(blockState1, level, blockPos, null, null);

@@ -2,6 +2,7 @@ package dev.coln.sonicit.networking.packet;
 
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.init.SoundInit;
+import dev.coln.sonicit.networking.ModMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -53,16 +54,18 @@ public class BasicSonicC2SPacket {
                 tntBlock.onCaughtFire(blockState, level, blockPos, null, null);
                 level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 0);
                 player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
-                level.playSound(player, blockPos, SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+                ModMessages.sendToAllPlayers(new SonicSoundS2CPacket(blockPos));
             } else if (block == Blocks.REDSTONE_LAMP) {
                 level.setBlock(blockPos, blockState.cycle(LIT), 2);
                 player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
                 level.playSound(player, blockPos, SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+                ModMessages.sendToAllPlayers(new SonicSoundS2CPacket(blockPos));
             } else if (block == Blocks.JUKEBOX) {
                 JukeboxBlock jukeboxBlock = (JukeboxBlock) block;
                 jukeboxBlock.setRecord(player, level, blockPos, blockState, new ItemStack(ItemInit.DWHO_THEME.get()));
                 level.levelEvent((Player)null, 1010, blockPos, Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
                 player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
+                ModMessages.sendToAllPlayers(new SonicSoundS2CPacket(blockPos));
             }
         });
         return true;

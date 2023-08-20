@@ -1,10 +1,7 @@
 package dev.coln.sonicit.networking;
 
 import dev.coln.sonicit.SonicIt;
-import dev.coln.sonicit.networking.packet.BasicSonicC2SPacket;
-import dev.coln.sonicit.networking.packet.ExtendSonicC2SPacket;
-import dev.coln.sonicit.networking.packet.RangedSonicC2SPacket;
-import dev.coln.sonicit.networking.packet.SwitchSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -53,6 +50,12 @@ public class ModMessages {
                 .encoder(SwitchSonicC2SPacket::toBytes)
                 .consumerMainThread(SwitchSonicC2SPacket::handle)
                 .add();
+
+        net.messageBuilder(SonicSoundS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SonicSoundS2CPacket::new)
+                .encoder(SonicSoundS2CPacket::toBytes)
+                .consumerMainThread(SonicSoundS2CPacket::handle)
+                .add();
     }
 
     public static <MSG> void sendToServer(MSG message) {
@@ -61,5 +64,9 @@ public class ModMessages {
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), message);
+    }
+
+    public static <MSG> void sendToAllPlayers(MSG message) {
+        INSTANCE.send(PacketDistributor.ALL.noArg(), message);
     }
 }
