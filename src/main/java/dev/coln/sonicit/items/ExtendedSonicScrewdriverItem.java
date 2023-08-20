@@ -26,6 +26,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -38,6 +41,7 @@ public class ExtendedSonicScrewdriverItem extends Item {
     public ExtendedSonicScrewdriverItem(Item.Properties properties) { super(properties); }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if(hand != InteractionHand.MAIN_HAND) {
             return super.use(level, player, hand);
@@ -74,45 +78,15 @@ public class ExtendedSonicScrewdriverItem extends Item {
             player.displayClientMessage(Component.literal("Current: " + modes[mode-1]), true);
             return super.use(level, player, hand);
         } else {
-            if(level.isClientSide()) {
-                if(mode == 2) {
-                    int RANGE = 5;
-                    List<BlockPos> blockPosList = BlockPos.betweenClosedStream(player.blockPosition().getX() - RANGE, player.blockPosition().getY() - RANGE, player.blockPosition().getZ() - RANGE, player.blockPosition().getX() + RANGE, player.blockPosition().getY() + RANGE, player.blockPosition().getZ() + RANGE).map(BlockPos::immutable).toList();
-                    player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 40);
-                    RandomSource randomSource = RandomSource.create();
-                    float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
-                    level.playSound(player, player.blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
-                    for (BlockPos blockPos : blockPosList) {
-                        BlockState blockState = level.getBlockState(blockPos);
-                        Block block = blockState.getBlock();
-                        if (block == Blocks.TNT) {
-                            TntBlock tntBlock = (TntBlock) block;
-                            tntBlock.onCaughtFire(blockState, level, blockPos, null, null);
-                            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 0);
-                            player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
-                            level.playSound(player, blockPos, SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
-                        } else if (block == Blocks.REDSTONE_LAMP) {
-                            level.setBlock(blockPos, blockState.cycle(LIT), 2);
-                            player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
-                            level.playSound(player, blockPos, SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
-                        } else if (block == Blocks.JUKEBOX) {
-                            JukeboxBlock jukeboxBlock = (JukeboxBlock) block;
-                            jukeboxBlock.setRecord(player, level, blockPos, blockState, new ItemStack(ItemInit.DWHO_THEME.get()));
-                            level.levelEvent((Player) null, 1010, blockPos, Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
-                            player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 20);
-                        }
-                    }
-                }
-            } else {
-                if(mode == 2) {
-                    ModMessages.sendToServer(new RangedSonicC2SPacket());
-                }
+            if(mode == 2) {
+                ModMessages.sendToServer(new RangedSonicC2SPacket());
             }
         }
         return super.use(level, player, hand);
     }
 
     @Override
+    @OnlyIn(Dist.CLIENT)
     public InteractionResult useOn(UseOnContext context) {
         if(context.getHand() != InteractionHand.MAIN_HAND) {
             return super.useOn(context);
@@ -124,36 +98,8 @@ public class ExtendedSonicScrewdriverItem extends Item {
             sonicNBT.putInt("mode", 1);
         }
         int mode = sonicNBT.getInt("mode");
-        Player player = context.getPlayer();
-        Level level = player.getLevel();
-        BlockState blockState = level.getBlockState(context.getClickedPos());
-        Block block = blockState.getBlock();
-
-        if(level.isClientSide()) {
-            if(mode == 1) {
-                RandomSource randomSource = RandomSource.create();
-                float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
-                if (block == Blocks.TNT) {
-                    TntBlock tntBlock = (TntBlock) block;
-                    tntBlock.onCaughtFire(blockState, level, context.getClickedPos(), null, null);
-                    level.setBlock(context.getClickedPos(), Blocks.AIR.defaultBlockState(), 0);
-                    player.getCooldowns().addCooldown(player.getItemInHand(InteractionHand.MAIN_HAND).getItem(), 20);
-                    level.playSound(player, context.getClickedPos(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
-                } else if (block == Blocks.REDSTONE_LAMP) {
-                    level.setBlock(context.getClickedPos(), blockState.cycle(LIT), 2);
-                    player.getCooldowns().addCooldown(player.getItemInHand(InteractionHand.MAIN_HAND).getItem(), 20);
-                    level.playSound(player, context.getClickedPos(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
-                } else if (block == Blocks.JUKEBOX) {
-                    JukeboxBlock jukeboxBlock = (JukeboxBlock) block;
-                    jukeboxBlock.setRecord(player, level, context.getClickedPos(), blockState, new ItemStack(ItemInit.DWHO_THEME.get()));
-                    level.levelEvent((Player)null, 1010, context.getClickedPos(), Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
-                    player.getCooldowns().addCooldown(player.getItemInHand(InteractionHand.MAIN_HAND).getItem(), 20);
-                }
-            }
-        } else {
-            if(mode == 1) {
-                ModMessages.sendToServer(new BasicSonicC2SPacket());
-            }
+        if(mode == 1) {
+            ModMessages.sendToServer(new BasicSonicC2SPacket());
         }
         return super.useOn(context);
     }
