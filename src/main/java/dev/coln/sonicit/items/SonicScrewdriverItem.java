@@ -6,6 +6,7 @@ import dev.coln.sonicit.networking.ModMessages;
 import dev.coln.sonicit.networking.packet.ExtendSonicC2SPacket;
 import dev.coln.sonicit.util.KeyboardHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
@@ -42,7 +43,22 @@ public class SonicScrewdriverItem extends Item {
     @OnlyIn(Dist.CLIENT)
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         if(KeyboardHelper.isHoldingControl()) {
-            ModMessages.sendToServer(new ExtendSonicC2SPacket());
+            if(Minecraft.getInstance().isLocalServer()) {
+                ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);
+                Item item = itemStack.getItem();
+                ItemStack newItem;
+                if(item == ItemInit.ELEVEN_SCREWDRIVER.get()) {
+                    newItem = new ItemStack(ItemInit.ELEVEN_SCREWDRIVER_EXTENDED.get());
+                    newItem.setTag(itemStack.getTag());
+                    player.setItemInHand(InteractionHand.MAIN_HAND, newItem);
+                } else if(item == ItemInit.TEN_SCREWDRIVER.get()) {
+                    newItem = new ItemStack(ItemInit.TEN_SCREWDRIVER_EXTENDED.get());
+                    newItem.setTag(itemStack.getTag());
+                    player.setItemInHand(InteractionHand.MAIN_HAND, newItem);
+                }
+            } else {
+                ModMessages.sendToServer(new ExtendSonicC2SPacket());
+            }
             return super.use(level, player, hand);
         }
         return super.use(level, player, hand);
