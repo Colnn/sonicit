@@ -74,6 +74,7 @@ public class RangedSonicC2SPacket {
                     JukeboxBlock jukeboxBlock = (JukeboxBlock) block1;
                     jukeboxBlock.setRecord(player, level, blockPos, blockState1, new ItemStack(ItemInit.DWHO_THEME.get()));
                     level.levelEvent((Player)null, 1010, blockPos, Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
+                    affected += 1;
                 }
             }
             player.displayClientMessage(Component.literal(ChatFormatting.GREEN + "Affected " + affected + " blocks."), true);
