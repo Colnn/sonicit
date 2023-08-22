@@ -3,6 +3,7 @@ package dev.coln.sonicit.block.entity;
 import dev.coln.sonicit.init.BlockEntityInit;
 import dev.coln.sonicit.init.BlockInit;
 import dev.coln.sonicit.init.ItemInit;
+import dev.coln.sonicit.recipe.SonicWorkbenchRecipe;
 import dev.coln.sonicit.screen.SonicWorkbenchMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,6 +28,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 public class SonicWorkbenchBlockEntity extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
@@ -149,25 +152,35 @@ public class SonicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
     }
 
     private static void craftItem(SonicWorkbenchBlockEntity blockEntity) {
+        Level level = blockEntity.level;
+        SimpleContainer inventory = new SimpleContainer(blockEntity.itemHandler.getSlots());
+        for (int i = 0; i < blockEntity.itemHandler.getSlots(); i++) {
+            inventory.setItem(i, blockEntity.itemHandler.getStackInSlot(i));
+        }
+
+        Optional<SonicWorkbenchRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(SonicWorkbenchRecipe.Type.INSTANCE, inventory, level);
+
         if(hasRecipe(blockEntity)) {
             blockEntity.itemHandler.extractItem(1, 1, false);
-            blockEntity.itemHandler.setStackInSlot(2, new ItemStack(ItemInit.TEN_SCREWDRIVER.get(),
-                    blockEntity.itemHandler.getStackInSlot(2).getCount() + 1));
+            blockEntity.itemHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(), recipe.get().getResultItem().getCount()));
 
             blockEntity.resetProgress();
         }
     }
 
     private static boolean hasRecipe(SonicWorkbenchBlockEntity blockEntity) {
+        Level level = blockEntity.level;
         SimpleContainer inventory = new SimpleContainer(blockEntity.itemHandler.getSlots());
         for (int i = 0; i < blockEntity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, blockEntity.itemHandler.getStackInSlot(i));
         }
 
-        boolean hasSonicEmitterInFirstSlot = blockEntity.itemHandler.getStackInSlot(1).getItem() == ItemInit.SONIC_EMITTER.get();
+        Optional<SonicWorkbenchRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(SonicWorkbenchRecipe.Type.INSTANCE, inventory, level);
 
-        return hasSonicEmitterInFirstSlot && canInsertAmountIntoOutputSlot(inventory) &&
-                canInsertItemIntoOutputSlot(inventory, new ItemStack(ItemInit.TEN_SCREWDRIVER.get(), 1));
+        return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
+                canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {

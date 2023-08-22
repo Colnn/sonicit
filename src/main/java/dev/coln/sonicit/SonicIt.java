@@ -54,6 +54,7 @@ public class SonicIt {
         BlockInit.register(modEventBus);
         BlockEntityInit.register(modEventBus);
         MenuTypeInit.register(modEventBus);
+        RecipeInit.register(modEventBus);
 
         ModMessages.register();
 
