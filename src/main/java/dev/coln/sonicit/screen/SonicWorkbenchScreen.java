@@ -17,6 +17,8 @@ public class SonicWorkbenchScreen extends AbstractContainerScreen<SonicWorkbench
         super(menu, inventory, component);
     }
 
+    protected int imageHeight = 175;
+
     @Override
     protected void init() {
         super.init();
