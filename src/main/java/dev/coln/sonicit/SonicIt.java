@@ -1,10 +1,11 @@
 package dev.coln.sonicit;
 
 import com.mojang.logging.LogUtils;
-import dev.coln.sonicit.init.ItemInit;
-import dev.coln.sonicit.init.SoundInit;
+import dev.coln.sonicit.init.*;
 import dev.coln.sonicit.networking.ModMessages;
+import dev.coln.sonicit.screen.SonicWorkbenchScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -50,6 +51,9 @@ public class SonicIt {
 
         ItemInit.ITEMS.register(modEventBus);
         SoundInit.SOUND_EVENTS.register(modEventBus);
+        BlockInit.register(modEventBus);
+        BlockEntityInit.register(modEventBus);
+        MenuTypeInit.register(modEventBus);
 
         ModMessages.register();
 
@@ -80,6 +84,8 @@ public class SonicIt {
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+
+            MenuScreens.register(MenuTypeInit.SONIC_WORKBENCH_MENU.get(), SonicWorkbenchScreen::new);
         }
     }
 }

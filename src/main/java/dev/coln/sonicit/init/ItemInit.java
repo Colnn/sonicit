@@ -31,6 +31,10 @@ public class ItemInit {
             () -> new ExtendedSonicScrewdriverItem(new Item.Properties().stacksTo(1)));
 
 
+    public static final RegistryObject<Item> SONIC_EMITTER = ITEMS.register("sonic_emitter",
+            () -> new Item(new Item.Properties()));
+
+
     public static final RegistryObject<Item> DWHO_THEME = ITEMS.register("doctor_who_theme",
             () -> new RecordItem(8, SoundInit.DWHO_THEME, new Item.Properties().stacksTo(1), 3880));
 }
