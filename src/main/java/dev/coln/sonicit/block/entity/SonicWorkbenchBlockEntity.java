@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class SonicWorkbenchBlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
+    private final ItemStackHandler itemHandler = new ItemStackHandler(4) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -162,8 +162,10 @@ public class SonicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
                 .getRecipeFor(SonicWorkbenchRecipe.Type.INSTANCE, inventory, level);
 
         if(hasRecipe(blockEntity)) {
+            blockEntity.itemHandler.extractItem(0, 1, false);
             blockEntity.itemHandler.extractItem(1, 1, false);
-            blockEntity.itemHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(), recipe.get().getResultItem().getCount()));
+            blockEntity.itemHandler.extractItem(2, 1, false);
+            blockEntity.itemHandler.setStackInSlot(3, new ItemStack(recipe.get().getResultItem().getItem(), recipe.get().getResultItem().getCount()));
 
             blockEntity.resetProgress();
         }
@@ -184,10 +186,10 @@ public class SonicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {
-        return inventory.getItem(2).getMaxStackSize() > inventory.getItem(2).getCount();
+        return inventory.getItem(3).getMaxStackSize() > inventory.getItem(3).getCount();
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleContainer inventory, ItemStack itemStack) {
-        return inventory.getItem(2).getItem() == itemStack.getItem() || inventory.getItem(2).isEmpty();
+        return inventory.getItem(3).getItem() == itemStack.getItem() || inventory.getItem(3).isEmpty();
     }
 }
