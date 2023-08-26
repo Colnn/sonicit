@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 
 public class SonicWorkbenchScreen extends AbstractContainerScreen<SonicWorkbenchMenu> {
     private static final ResourceLocation TEXTURE =

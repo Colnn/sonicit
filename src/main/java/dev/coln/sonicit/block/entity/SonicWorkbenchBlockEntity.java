@@ -1,8 +1,6 @@
 package dev.coln.sonicit.block.entity;
 
 import dev.coln.sonicit.init.BlockEntityInit;
-import dev.coln.sonicit.init.BlockInit;
-import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.recipe.SonicWorkbenchRecipe;
 import dev.coln.sonicit.screen.SonicWorkbenchMenu;
 import net.minecraft.core.BlockPos;
@@ -19,7 +17,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;

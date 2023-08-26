@@ -3,7 +3,6 @@ package dev.coln.sonicit.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import dev.coln.sonicit.SonicIt;
-import dev.coln.sonicit.screen.SonicWorkbenchScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

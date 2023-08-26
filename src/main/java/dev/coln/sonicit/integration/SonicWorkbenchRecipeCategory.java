@@ -2,7 +2,6 @@ package dev.coln.sonicit.integration;
 
 import dev.coln.sonicit.SonicIt;
 import dev.coln.sonicit.init.BlockInit;
-import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.recipe.SonicWorkbenchRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

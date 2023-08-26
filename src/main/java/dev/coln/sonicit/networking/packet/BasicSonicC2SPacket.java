@@ -5,7 +5,6 @@ import dev.coln.sonicit.init.SoundInit;
 import dev.coln.sonicit.networking.ModMessages;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

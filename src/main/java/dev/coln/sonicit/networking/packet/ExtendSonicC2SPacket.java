@@ -2,7 +2,6 @@ package dev.coln.sonicit.networking.packet;
 
 import dev.coln.sonicit.init.ItemInit;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.Main;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;

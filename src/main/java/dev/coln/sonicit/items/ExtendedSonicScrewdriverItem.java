@@ -1,6 +1,5 @@
 package dev.coln.sonicit.items;
 
-import com.mojang.authlib.minecraft.client.MinecraftClient;
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.init.SoundInit;
 import dev.coln.sonicit.networking.ModMessages;
@@ -15,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -33,7 +31,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.List;
