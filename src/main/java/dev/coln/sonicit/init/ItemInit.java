@@ -33,6 +33,8 @@ public class ItemInit {
 
     public static final RegistryObject<Item> SONIC_EMITTER = ITEMS.register("sonic_emitter",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> SONIC_HULL = ITEMS.register("sonic_hull",
+            () -> new Item(new Item.Properties()));
 
 
     public static final RegistryObject<Item> DWHO_THEME = ITEMS.register("doctor_who_theme",
