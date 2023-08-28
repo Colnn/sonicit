@@ -114,7 +114,7 @@ public class SonicWorkbenchMenu extends AbstractContainerMenu {
     private void addPlayerInventory(Inventory playerInventory) {
         for(int i = 0; i < 3; i++) {
             for(int l = 0; l <9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + 1 * 9 + 9, 8 + l * 18, 86 + i * 18));
+                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 86 + i * 18));
             }
         }
     }
