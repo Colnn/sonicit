@@ -16,7 +16,7 @@ public class SonicWorkbenchScreen extends AbstractContainerScreen<SonicWorkbench
         super(menu, inventory, component);
     }
 
-    protected int imageHeight = 175;
+    protected int imageHeight = 178;
 
     @Override
     protected void init() {
@@ -38,7 +38,7 @@ public class SonicWorkbenchScreen extends AbstractContainerScreen<SonicWorkbench
 
     private void renderProgressArrow(PoseStack stack, int x, int y) {
         if(menu.isCrafting()) {
-            blit(stack, x + 105, y + 33, 176, 0, 8, menu.getScaledProgress());
+            blit(stack, x + 93, y + 42, 179, 42, menu.getScaledProgress(), 6);
         }
     }
 
