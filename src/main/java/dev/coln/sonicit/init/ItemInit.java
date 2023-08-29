@@ -34,6 +34,10 @@ public class ItemInit {
             () -> new Item(new Item.Properties()));
 
 
+    public static final RegistryObject<Item> LIVING_METAL = ITEMS.register("living_metal",
+            () -> new Item(new Item.Properties().tab(SonicIt.ModCreativeTab.instance)));
+
+
     public static final RegistryObject<Item> DWHO_THEME = ITEMS.register("doctor_who_theme",
             () -> new RecordItem(8, SoundInit.DWHO_THEME, new Item.Properties().stacksTo(1), 3880));
 }
