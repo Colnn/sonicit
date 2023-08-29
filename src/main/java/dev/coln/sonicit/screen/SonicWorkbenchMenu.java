@@ -33,10 +33,10 @@ public class SonicWorkbenchMenu extends AbstractContainerMenu {
         addPlayerHotbar(inventory);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 71, 9));
-            this.addSlot(new SlotItemHandler(handler, 1, 71, 31));
-            this.addSlot(new SlotItemHandler(handler, 2, 71, 53));
-            this.addSlot(new SlotItemHandler(handler, 3, 122, 31));
+            this.addSlot(new SlotItemHandler(handler, 0, 71, 15));
+            this.addSlot(new SlotItemHandler(handler, 1, 71, 37));
+            this.addSlot(new SlotItemHandler(handler, 2, 71, 59));
+            this.addSlot(new SlotItemHandler(handler, 3, 122, 37));
         });
 
         addDataSlots(data);

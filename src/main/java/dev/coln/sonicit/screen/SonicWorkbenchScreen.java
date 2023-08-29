@@ -21,6 +21,7 @@ public class SonicWorkbenchScreen extends AbstractContainerScreen<SonicWorkbench
     @Override
     protected void init() {
         super.init();
+        this.titleLabelY = 2;
     }
 
     @Override
@@ -38,7 +39,7 @@ public class SonicWorkbenchScreen extends AbstractContainerScreen<SonicWorkbench
 
     private void renderProgressArrow(PoseStack stack, int x, int y) {
         if(menu.isCrafting()) {
-            blit(stack, x + 93, y + 42, 179, 42, menu.getScaledProgress(), 6);
+            blit(stack, x + 93, y + 48, 179, 48, menu.getScaledProgress(), 6);
         }
     }
 
