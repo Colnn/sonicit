@@ -17,13 +17,13 @@ import net.minecraft.world.item.ItemStack;
 
 public class SonicWorkbenchRecipeCategory implements IRecipeCategory<SonicWorkbenchRecipe> {
     public final static ResourceLocation UID = new ResourceLocation(SonicIt.MOD_ID, "sonic_workbench");
-    public final static ResourceLocation TEXTURE = new ResourceLocation(SonicIt.MOD_ID, "textures/gui/sonic_workbench_gui.png");
+    public final static ResourceLocation TEXTURE = new ResourceLocation(SonicIt.MOD_ID, "textures/gui/sonic_workbench_jei.png");
 
     private final IDrawable background;
     private final IDrawable icon;
 
     public SonicWorkbenchRecipeCategory(IGuiHelper helper) {
-        this.background = helper.createDrawable(TEXTURE, 0, 0, 176, 85);
+        this.background = helper.createDrawable(TEXTURE, 0, 0, 176, 90);
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockInit.SONIC_WORKBENCH.get()));
     }
 
@@ -49,8 +49,10 @@ public class SonicWorkbenchRecipeCategory implements IRecipeCategory<SonicWorkbe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, SonicWorkbenchRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, 86, 15).addIngredients(recipe.getIngredients().get(0));
+        builder.addSlot(RecipeIngredientRole.INPUT, 71, 21).addIngredients(recipe.getIngredients().get(0));
+        builder.addSlot(RecipeIngredientRole.INPUT, 71, 43).addIngredients(recipe.getIngredients().get(1));
+        builder.addSlot(RecipeIngredientRole.INPUT, 71, 65).addIngredients(recipe.getIngredients().get(2));
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 86, 60).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 122, 43).addItemStack(recipe.getResultItem());
     }
 }
