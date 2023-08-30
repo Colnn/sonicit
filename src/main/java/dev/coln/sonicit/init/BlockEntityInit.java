@@ -1,6 +1,7 @@
 package dev.coln.sonicit.init;
 
 import dev.coln.sonicit.SonicIt;
+import dev.coln.sonicit.block.entity.MetalizerBlockEntity;
 import dev.coln.sonicit.block.entity.SonicWorkbenchBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,6 +16,10 @@ public class BlockEntityInit {
             BLOCK_ENTITIES.register("sonic_workbench", () ->
                     BlockEntityType.Builder.of(SonicWorkbenchBlockEntity::new,
                             BlockInit.SONIC_WORKBENCH.get()).build(null));
+    public static final RegistryObject<BlockEntityType<MetalizerBlockEntity>> METALIZER =
+            BLOCK_ENTITIES.register("metalizer", () ->
+                    BlockEntityType.Builder.of(MetalizerBlockEntity::new,
+                            BlockInit.METALIZER.get()).build(null));
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
