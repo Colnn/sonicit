@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "sonicit:block/sonic_workbench"
+    }
+  }
+}
