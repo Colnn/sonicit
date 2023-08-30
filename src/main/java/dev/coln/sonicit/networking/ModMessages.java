@@ -39,6 +39,12 @@ public class ModMessages {
                 .consumerMainThread(RangedSonicC2SPacket::handle)
                 .add();
 
+        net.messageBuilder(ConfuseSonicC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ConfuseSonicC2SPacket::new)
+                .encoder(ConfuseSonicC2SPacket::toBytes)
+                .consumerMainThread(ConfuseSonicC2SPacket::handle)
+                .add();
+
         net.messageBuilder(ExtendSonicC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
                 .decoder(ExtendSonicC2SPacket::new)
                 .encoder(ExtendSonicC2SPacket::toBytes)

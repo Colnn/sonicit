@@ -3,10 +3,7 @@ package dev.coln.sonicit.items;
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.init.SoundInit;
 import dev.coln.sonicit.networking.ModMessages;
-import dev.coln.sonicit.networking.packet.BasicSonicC2SPacket;
-import dev.coln.sonicit.networking.packet.ExtendSonicC2SPacket;
-import dev.coln.sonicit.networking.packet.RangedSonicC2SPacket;
-import dev.coln.sonicit.networking.packet.SwitchSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.*;
 import dev.coln.sonicit.util.KeyboardHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -20,6 +17,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,6 +30,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,7 +38,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class ExtendedSonicScrewdriverItem extends Item {
-    String[] modes = new String[2];
+    String[] modes = new String[3];
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
 
 
@@ -77,6 +79,7 @@ public class ExtendedSonicScrewdriverItem extends Item {
         } else if(KeyboardHelper.isHoldingShift()){
             this.modes[0] = "Basic";
             this.modes[1] = "Ranged";
+            this.modes[2] = "Confuse";
             if(Minecraft.getInstance().isLocalServer()) {
                 player.getCooldowns().addCooldown(player.getItemInHand(InteractionHand.MAIN_HAND).getItem(), 3);
                 if(mode >= modes.length) {
@@ -92,38 +95,60 @@ public class ExtendedSonicScrewdriverItem extends Item {
             return super.use(level, player, hand);
         } else {
             if(Minecraft.getInstance().isLocalServer()) {
-                int affected = 0;
-                int RANGE = 5;
-                List<BlockPos> blockPosList = BlockPos.betweenClosedStream(player.blockPosition().getX() - RANGE, player.blockPosition().getY() - RANGE, player.blockPosition().getZ() - RANGE, player.blockPosition().getX() + RANGE, player.blockPosition().getY() + RANGE, player.blockPosition().getZ() + RANGE).map(BlockPos::immutable).toList();
-                player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 40);
-                RandomSource randomSource = RandomSource.create();
-                float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
-                level.playSound(player, player.blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
-                for (BlockPos blockPos : blockPosList) {
-                    BlockState blockState1 = level.getBlockState(blockPos);
-                    Block block1 = blockState1.getBlock();
-                    if(block1 == Blocks.TNT) {
-                        TntBlock tntBlock = (TntBlock) block1;
-                        tntBlock.onCaughtFire(blockState1, level, blockPos, null, null);
-                        level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 1);
-                        affected += 1;
-                    } else if (block1 == Blocks.REDSTONE_LAMP) {
-                        level.setBlock(blockPos, blockState1.cycle(LIT) ,2);
-                        affected += 1;
-                    } else if (block1 == Blocks.LIGHTNING_ROD) {
-                        LightningRodBlock lightningRodBlock = (LightningRodBlock) block1;
-                        lightningRodBlock.onLightningStrike(blockState1, level, blockPos);
-                        affected += 1;
-                    } else if (block1 == Blocks.JUKEBOX) {
-                        JukeboxBlock jukeboxBlock = (JukeboxBlock) block1;
-                        jukeboxBlock.setRecord(player, level, blockPos, blockState1, new ItemStack(ItemInit.DWHO_THEME.get()));
-                        level.levelEvent((Player)null, 1010, blockPos, Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
+                if(mode == 2) {
+                    int affected = 0;
+                    int RANGE = 5;
+                    List<BlockPos> blockPosList = BlockPos.betweenClosedStream(player.blockPosition().getX() - RANGE, player.blockPosition().getY() - RANGE, player.blockPosition().getZ() - RANGE, player.blockPosition().getX() + RANGE, player.blockPosition().getY() + RANGE, player.blockPosition().getZ() + RANGE).map(BlockPos::immutable).toList();
+                    player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 40);
+                    RandomSource randomSource = RandomSource.create();
+                    float random = Mth.randomBetween(randomSource, 0.5f, 2.0f);
+                    level.playSound(player, player.blockPosition(), SoundInit.SONIC_SOUND.get(), SoundSource.PLAYERS, 1, random);
+                    for (BlockPos blockPos : blockPosList) {
+                        BlockState blockState1 = level.getBlockState(blockPos);
+                        Block block1 = blockState1.getBlock();
+                        if(block1 == Blocks.TNT) {
+                            TntBlock tntBlock = (TntBlock) block1;
+                            tntBlock.onCaughtFire(blockState1, level, blockPos, null, null);
+                            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 1);
+                            affected += 1;
+                        } else if (block1 == Blocks.REDSTONE_LAMP) {
+                            level.setBlock(blockPos, blockState1.cycle(LIT) ,2);
+                            affected += 1;
+                        } else if (block1 == Blocks.LIGHTNING_ROD) {
+                            LightningRodBlock lightningRodBlock = (LightningRodBlock) block1;
+                            lightningRodBlock.onLightningStrike(blockState1, level, blockPos);
+                            affected += 1;
+                        } else if (block1 == Blocks.JUKEBOX) {
+                            JukeboxBlock jukeboxBlock = (JukeboxBlock) block1;
+                            jukeboxBlock.setRecord(player, level, blockPos, blockState1, new ItemStack(ItemInit.DWHO_THEME.get()));
+                            level.levelEvent((Player)null, 1010, blockPos, Registry.ITEM.getId(ItemInit.DWHO_THEME.get()));
+                        }
                     }
+                    player.displayClientMessage(Component.literal(ChatFormatting.GREEN + "Affected " + affected + " blocks."), true);
+                } else if(mode == 3) {
+                    int affected = 0;
+                    int RANGE = 5;
+
+                    BlockPos topCorner = player.blockPosition().offset(RANGE, RANGE, RANGE);
+                    BlockPos bottomCorner = player.blockPosition().offset(-RANGE, -RANGE, -RANGE);
+                    AABB box = new AABB(topCorner, bottomCorner);
+
+                    player.getCooldowns().addCooldown(player.getItemInHand(hand).getItem(), 40);
+                    List<Entity> entities = level.getEntities(null, box);
+                    for (Entity target : entities){
+                        if (target instanceof LivingEntity){
+                            ((LivingEntity) target).addEffect(new MobEffectInstance(MobEffects.CONFUSION, 400, 1));
+                            ((LivingEntity) target).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 400, 10));
+                            affected += 1;
+                        }
+                    }
+                    player.displayClientMessage(Component.literal(ChatFormatting.GREEN + "Affected " + affected + " blocks."), true);
                 }
-                player.displayClientMessage(Component.literal(ChatFormatting.GREEN + "Affected " + affected + " blocks."), true);
             } else {
                 if(mode == 2) {
                     ModMessages.sendToServer(new RangedSonicC2SPacket());
+                } else if(mode == 3) {
+                    ModMessages.sendToServer(new ConfuseSonicC2SPacket());
                 }
             }
         }

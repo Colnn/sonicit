@@ -10,7 +10,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class SwitchSonicC2SPacket {
-    String[] modes = new String[2];
+    String[] modes = new String[3];
 
     public SwitchSonicC2SPacket() {
 
@@ -27,6 +27,7 @@ public class SwitchSonicC2SPacket {
         context.enqueueWork(() -> {
             this.modes[0] = "Basic";
             this.modes[1] = "Ranged";
+            this.modes[2] = "Confuse";
 
             ServerPlayer player = context.getSender();
             InteractionHand hand = InteractionHand.MAIN_HAND;
