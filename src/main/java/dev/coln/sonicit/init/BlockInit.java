@@ -14,6 +14,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Properties;
 import java.util.function.Supplier;
 
 public class BlockInit {
@@ -27,6 +28,14 @@ public class BlockInit {
     public static final RegistryObject<Block> METALIZER = registerBlock("metalizer",
             () -> new MetalizerBlock(BlockBehaviour.Properties.of(Material.METAL)
                     .strength(6f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
+
+    public static final RegistryObject<Block> LIVING_METAL_ORE = registerBlock("living_metal_ore",
+            () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
+                    .strength(5f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
+
+    public static final RegistryObject<Block> DEEPSLATE_LIVING_METAL_ORE = registerBlock("deepslate_living_metal_ore",
+            () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
+                    .strength(7f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
 
     // TODO: Add Living Metal ore
     // TODO: Add a sonic customizer

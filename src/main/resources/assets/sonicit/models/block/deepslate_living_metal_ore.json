@@ -1,0 +1,6 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"all": "sonicit:block/deepslate_living_metal_ore"
+	}
+}

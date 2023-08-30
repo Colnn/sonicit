@@ -53,6 +53,8 @@ public class SonicIt {
         BlockEntityInit.register(modEventBus);
         MenuTypeInit.register(modEventBus);
         RecipeInit.register(modEventBus);
+        ConfiguredFeatureInit.CONFIGURED_FEATURES.register(modEventBus);
+        PlacedFeatureInit.PLACED_FEATURES.register(modEventBus);
 
         ModMessages.register();
 
