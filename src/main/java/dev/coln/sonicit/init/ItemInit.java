@@ -14,6 +14,8 @@ public class ItemInit {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, SonicIt.MOD_ID);
 
+    // TODO: Add a "basic" sonic screwdriver
+
     public static final RegistryObject<Item> TEN_SCREWDRIVER = ITEMS.register("10_screwdriver",
             () -> new SonicScrewdriverItem(new Item.Properties().stacksTo(1).tab(SonicIt.ModCreativeTab.instance)));
     public static final RegistryObject<Item> TEN_SCREWDRIVER_EXTENDED = ITEMS.register("10_screwdriver_extended",

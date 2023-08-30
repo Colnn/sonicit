@@ -28,6 +28,9 @@ public class BlockInit {
             () -> new MetalizerBlock(BlockBehaviour.Properties.of(Material.METAL)
                     .strength(6f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
 
+    // TODO: Add Living Metal ore
+    // TODO: Add a sonic customizer
+
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn, tab);
