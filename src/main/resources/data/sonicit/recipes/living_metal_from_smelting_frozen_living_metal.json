@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "cookingtime": 400,
+  "experience": 0.75,
+  "ingredient": {
+    "item": "sonicit:frozen_living_metal"
+  },
+  "result": "sonicit:living_metal"
+}

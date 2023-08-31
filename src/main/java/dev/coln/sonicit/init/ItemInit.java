@@ -38,6 +38,8 @@ public class ItemInit {
 
     public static final RegistryObject<Item> LIVING_METAL = ITEMS.register("living_metal",
             () -> new Item(new Item.Properties().tab(SonicIt.ModCreativeTab.instance)));
+    public static final RegistryObject<Item> FROZEN_LIVING_METAL = ITEMS.register("frozen_living_metal",
+            () -> new Item(new Item.Properties().tab(SonicIt.ModCreativeTab.instance)));
 
 
     public static final RegistryObject<Item> DWHO_THEME = ITEMS.register("doctor_who_theme",
