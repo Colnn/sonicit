@@ -37,7 +37,6 @@ public class BlockInit {
             () -> new Block(BlockBehaviour.Properties.of(Material.STONE)
                     .strength(7f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
 
-    // TODO: Add Living Metal ore
     // TODO: Add a sonic customizer
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab) {
