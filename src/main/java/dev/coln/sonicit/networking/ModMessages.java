@@ -2,6 +2,7 @@ package dev.coln.sonicit.networking;
 
 import dev.coln.sonicit.SonicIt;
 import dev.coln.sonicit.networking.packet.*;
+import dev.coln.sonicit.networking.packet.customizer.CustomizeSonicC2SPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -61,6 +62,12 @@ public class ModMessages {
                 .decoder(SonicSoundS2CPacket::new)
                 .encoder(SonicSoundS2CPacket::toBytes)
                 .consumerMainThread(SonicSoundS2CPacket::handle)
+                .add();
+
+        net.messageBuilder(CustomizeSonicC2SPacket.class, id(), NetworkDirection.PLAY_TO_SERVER)
+                .decoder(CustomizeSonicC2SPacket::new)
+                .encoder(CustomizeSonicC2SPacket::toBytes)
+                .consumerMainThread(CustomizeSonicC2SPacket::handle)
                 .add();
     }
 

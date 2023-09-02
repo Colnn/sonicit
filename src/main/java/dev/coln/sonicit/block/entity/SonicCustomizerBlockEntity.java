@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class SonicCustomizerBlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
+    public final ItemStackHandler itemHandler = new ItemStackHandler(3) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -131,19 +131,6 @@ public class SonicCustomizerBlockEntity extends BlockEntity implements MenuProvi
         if(level.isClientSide()) {
             return;
         }
-
-        if(hasRecipe(blockEntity)) {
-            blockEntity.progress++;
-            setChanged(level, blockPos, blockState);
-
-            if(blockEntity.progress >= blockEntity.maxProgress) {
-                craftItem(blockEntity);
-            }
-        } else {
-            blockEntity.resetProgress();
-            setChanged(level, blockPos, blockState);
-        }
-
     }
 
     private void resetProgress() {
@@ -159,30 +146,6 @@ public class SonicCustomizerBlockEntity extends BlockEntity implements MenuProvi
 
         Optional<MetalizerRecipe> recipe = level.getRecipeManager()
                 .getRecipeFor(MetalizerRecipe.Type.INSTANCE, inventory, level);
-
-        if(hasRecipe(blockEntity)) {
-            blockEntity.itemHandler.extractItem(1, 1, false);
-            blockEntity.itemHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(),
-                    blockEntity.itemHandler.getStackInSlot(2).getCount() + 1));
-            setChanged(level, blockEntity.getBlockPos(), blockEntity.getBlockState());
-
-            blockEntity.resetProgress();
-        }
-    }
-
-    private static boolean hasRecipe(SonicCustomizerBlockEntity blockEntity) {
-        Level level = blockEntity.level;
-        SimpleContainer inventory = new SimpleContainer(blockEntity.itemHandler.getSlots());
-        for (int i = 0; i < blockEntity.itemHandler.getSlots(); i++) {
-            inventory.setItem(i, blockEntity.itemHandler.getStackInSlot(i));
-        }
-
-        Optional<MetalizerRecipe> recipe = level.getRecipeManager()
-                .getRecipeFor(MetalizerRecipe.Type.INSTANCE, inventory, level);
-
-
-        return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&
-                canInsertItemIntoOutputSlot(inventory, recipe.get().getResultItem());
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {

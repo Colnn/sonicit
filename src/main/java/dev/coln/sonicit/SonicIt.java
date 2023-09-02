@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import dev.coln.sonicit.init.*;
 import dev.coln.sonicit.networking.ModMessages;
 import dev.coln.sonicit.screen.MetalizerScreen;
+import dev.coln.sonicit.screen.SonicCustomizerScreen;
 import dev.coln.sonicit.screen.SonicWorkbenchScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.item.CreativeModeTab;
@@ -83,6 +84,7 @@ public class SonicIt {
 
             MenuScreens.register(MenuTypeInit.SONIC_WORKBENCH_MENU.get(), SonicWorkbenchScreen::new);
             MenuScreens.register(MenuTypeInit.METALIZER_MENU.get(), MetalizerScreen::new);
+            MenuScreens.register(MenuTypeInit.SONIC_CUSTOMIZER_MENU.get(), SonicCustomizerScreen::new);
         }
     }
 }
