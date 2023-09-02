@@ -2,6 +2,7 @@ package dev.coln.sonicit.init;
 
 import dev.coln.sonicit.SonicIt;
 import dev.coln.sonicit.block.custom.MetalizerBlock;
+import dev.coln.sonicit.block.custom.SonicCustomizerBlock;
 import dev.coln.sonicit.block.custom.SonicWorkbenchBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -27,6 +28,10 @@ public class BlockInit {
 
     public static final RegistryObject<Block> METALIZER = registerBlock("metalizer",
             () -> new MetalizerBlock(BlockBehaviour.Properties.of(Material.METAL)
+                    .strength(6f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
+
+    public static final RegistryObject<Block> SONIC_CUSTOMIZER = registerBlock("sonic_customizer",
+            () -> new SonicCustomizerBlock(BlockBehaviour.Properties.of(Material.METAL)
                     .strength(6f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
 
     public static final RegistryObject<Block> LIVING_METAL_ORE = registerBlock("living_metal_ore",

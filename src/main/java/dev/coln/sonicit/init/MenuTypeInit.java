@@ -2,6 +2,7 @@ package dev.coln.sonicit.init;
 
 import dev.coln.sonicit.SonicIt;
 import dev.coln.sonicit.screen.MetalizerMenu;
+import dev.coln.sonicit.screen.SonicCustomizerMenu;
 import dev.coln.sonicit.screen.SonicWorkbenchMenu;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -21,6 +22,9 @@ public class MenuTypeInit {
 
     public static final RegistryObject<MenuType<MetalizerMenu>> METALIZER_MENU =
             registerMenuType(MetalizerMenu::new, "metalizer_menu");
+
+    public static final RegistryObject<MenuType<SonicCustomizerMenu>> SONIC_CUSTOMIZER_MENU =
+            registerMenuType(SonicCustomizerMenu::new, "sonic_customizer_menu");
 
     private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory,
                                                                                                  String name) {
