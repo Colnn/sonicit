@@ -31,6 +31,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
+
+    //TODO: Add actual Forge fluid support
     private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
         @Override
         protected void onContentsChanged(int slot) {
