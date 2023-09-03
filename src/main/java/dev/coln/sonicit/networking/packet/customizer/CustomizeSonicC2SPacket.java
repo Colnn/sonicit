@@ -1,5 +1,6 @@
 package dev.coln.sonicit.networking.packet.customizer;
 
+import dev.coln.sonicit.SonicIt;
 import dev.coln.sonicit.block.entity.SonicCustomizerBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -39,7 +40,7 @@ public class CustomizeSonicC2SPacket {
             if(blockEntity instanceof SonicCustomizerBlockEntity) {
                 SonicCustomizerBlockEntity blockEntity1 = (SonicCustomizerBlockEntity) blockEntity;
                 itemStack.setTag(blockEntity1.itemHandler.getStackInSlot(0).getTag());
-                if(!blockEntity1.itemHandler.getStackInSlot(0).isEmpty()) {
+                if(blockEntity1.itemHandler.getStackInSlot(0).getItem().getItemCategory() == SonicIt.ModCreativeTab.instance) {
                     blockEntity1.itemHandler.setStackInSlot(0, itemStack);
                 }
             }
