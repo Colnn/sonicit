@@ -10,6 +10,8 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
@@ -17,6 +19,7 @@ public class MetalizerMenu extends AbstractContainerMenu {
     public final MetalizerBlockEntity blockEntity;
     private final Level level;
     private final ContainerData data;
+    private FluidStack fluidStack;
 
     public MetalizerMenu(int id, Inventory inventory, FriendlyByteBuf extraData) {
         this(id, inventory, inventory.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
@@ -28,11 +31,12 @@ public class MetalizerMenu extends AbstractContainerMenu {
         this.blockEntity = (MetalizerBlockEntity) blockEntity;
         this.level = inventory.player.level;
         this.data = data;
+        this.fluidStack = this.blockEntity.getFluidStack();
 
         addPlayerInventory(inventory);
         addPlayerHotbar(inventory);
 
-        this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
+        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(handler -> {
             this.addSlot(new SlotItemHandler(handler, 0, 9, 14));
             this.addSlot(new SlotItemHandler(handler, 1, 93, 5));
             this.addSlot(new SlotItemHandler(handler, 2, 93, 54));
@@ -43,6 +47,14 @@ public class MetalizerMenu extends AbstractContainerMenu {
 
     public boolean isCrafting() {
         return data.get(0) > 0;
+    }
+
+    public void setFluid(FluidStack fluidStack) {
+        this.fluidStack = fluidStack;
+    }
+
+    public FluidStack getFluidStack() {
+        return fluidStack;
     }
 
     public int getScaledProgress() {

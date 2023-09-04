@@ -1,9 +1,10 @@
 package dev.coln.sonicit.block.entity;
 
 import dev.coln.sonicit.init.BlockEntityInit;
+import dev.coln.sonicit.networking.ModMessages;
+import dev.coln.sonicit.networking.packet.FluidSyncS2CPacket;
 import dev.coln.sonicit.recipe.MetalizerRecipe;
 import dev.coln.sonicit.screen.MetalizerMenu;
-import dev.coln.sonicit.screen.SonicWorkbenchMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,13 +17,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
@@ -32,15 +36,50 @@ import java.util.Optional;
 
 public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
 
-    //TODO: Add actual Forge fluid support
     private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
         }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return switch (slot) {
+                case 0 -> stack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).isPresent();
+                case 1 -> true;
+                case 2 -> false;
+                default -> super.isItemValid(slot, stack);
+            };
+        }
     };
 
+    private final FluidTank FLUID_TANK = new FluidTank(64000) {
+        @Override
+        protected void onContentsChanged() {
+            setChanged();
+            if(!level.isClientSide()) {
+                ModMessages.sendToAllPlayers(new FluidSyncS2CPacket(this.fluid, worldPosition));
+            }
+        }
+
+        @Override
+        public boolean isFluidValid(FluidStack stack) {
+            return stack.getFluid() == Fluids.LAVA;
+        }
+    };
+
+    private static final int LAVA_REQ = 32;
+
+    public void setFluid(FluidStack stack) {
+        this.FLUID_TANK.setFluid(stack);
+    }
+
+    public FluidStack getFluidStack() {
+        return this.FLUID_TANK.getFluid();
+    }
+
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+    private LazyOptional<IFluidHandler> lazyFluidHandler = LazyOptional.empty();
 
     protected final ContainerData data;
     private int progress = 0;
@@ -92,8 +131,12 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if(cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if(cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItemHandler.cast();
+        }
+
+        if(cap == ForgeCapabilities.FLUID_HANDLER) {
+            return lazyFluidHandler.cast();
         }
 
         return super.getCapability(cap, side);
@@ -103,19 +146,21 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
     public void onLoad() {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
+        lazyFluidHandler = LazyOptional.of(() -> FLUID_TANK);
     }
 
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
+        lazyFluidHandler.invalidate();
     }
 
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         compoundTag.put("inventory", itemHandler.serializeNBT());
         compoundTag.putInt("metalizer.progress", this.progress);
-        compoundTag.putInt("metalizer.lava", this.lava);
+        compoundTag = FLUID_TANK.writeToNBT(compoundTag);
 
         super.saveAdditional(compoundTag);
     }
@@ -125,7 +170,7 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
         super.load(compoundTag);
         itemHandler.deserializeNBT(compoundTag.getCompound("inventory"));
         progress = serializeNBT().getInt("metalizer.progress");
-        lava = serializeNBT().getInt("metalizer.lava");
+        FLUID_TANK.readFromNBT(compoundTag);
     }
 
     public void drops() {
@@ -142,15 +187,13 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
             return;
         }
 
-        if(blockEntity.itemHandler.getStackInSlot(0).getItem() == Items.LAVA_BUCKET && blockEntity.lava < 100) {
-            blockEntity.lava += 50;
-            blockEntity.itemHandler.setStackInSlot(0, ItemStack.EMPTY);
-            level.getServer().sendSystemMessage(Component.literal("Lava level: " + blockEntity.lava));
-            setChanged(level, blockPos, blockState);
+        if(hasFluidItemInSourceSlot(blockEntity)) {
+            transferItemFluidToFluidTank(blockEntity);
         }
 
-        if(hasRecipe(blockEntity) && blockEntity.lava >= 15) {
+        if(hasRecipe(blockEntity) && hasEnoughLava(blockEntity)) {
             blockEntity.progress++;
+            extractLava(blockEntity);
             setChanged(level, blockPos, blockState);
 
             if(blockEntity.progress >= blockEntity.maxProgress) {
@@ -161,6 +204,37 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
             setChanged(level, blockPos, blockState);
         }
 
+    }
+
+    private static void transferItemFluidToFluidTank(MetalizerBlockEntity blockEntity) {
+        blockEntity.itemHandler.getStackInSlot(0).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(handler -> {
+            int drainAmount = Math.min(blockEntity.FLUID_TANK.getSpace(), 1000);
+
+            FluidStack stack = handler.drain(drainAmount, IFluidHandler.FluidAction.SIMULATE);
+            if(blockEntity.FLUID_TANK.isFluidValid(stack)) {
+                stack = handler.drain(drainAmount, IFluidHandler.FluidAction.EXECUTE);
+                fillTankWithFluid(blockEntity, stack, handler.getContainer());
+            }
+        });
+    }
+
+    private static void fillTankWithFluid(MetalizerBlockEntity blockEntity, FluidStack stack, ItemStack container) {
+        blockEntity.FLUID_TANK.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+
+        blockEntity.itemHandler.extractItem(0, 1, false);
+        blockEntity.itemHandler.insertItem(0, container, false);
+    }
+
+    private static boolean hasFluidItemInSourceSlot(MetalizerBlockEntity blockEntity) {
+        return blockEntity.itemHandler.getStackInSlot(0).getCount() > 0;
+    }
+
+    private static boolean hasEnoughLava(MetalizerBlockEntity blockEntity) {
+        return blockEntity.FLUID_TANK.getFluidAmount() >= LAVA_REQ * blockEntity.maxProgress;
+    }
+
+    private static void extractLava(MetalizerBlockEntity blockEntity) {
+        blockEntity.FLUID_TANK.drain(LAVA_REQ, IFluidHandler.FluidAction.EXECUTE);
     }
 
     private void resetProgress() {
@@ -181,8 +255,6 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
             blockEntity.itemHandler.extractItem(1, 1, false);
             blockEntity.itemHandler.setStackInSlot(2, new ItemStack(recipe.get().getResultItem().getItem(),
                     blockEntity.itemHandler.getStackInSlot(2).getCount() + 1));
-            blockEntity.lava = blockEntity.lava - 15;
-            setChanged(level, blockEntity.getBlockPos(), blockEntity.getBlockState());
 
             blockEntity.resetProgress();
         }
