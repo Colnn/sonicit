@@ -1,6 +1,6 @@
 package dev.coln.sonicit.screen;
 
-import dev.coln.sonicit.block.entity.MetalizerBlockEntity;
+import dev.coln.sonicit.block.entity.SynthesizerBlockEntity;
 import dev.coln.sonicit.init.BlockInit;
 import dev.coln.sonicit.init.MenuTypeInit;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,23 +12,22 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class MetalizerMenu extends AbstractContainerMenu {
-    public final MetalizerBlockEntity blockEntity;
+public class SynthesizerMenu extends AbstractContainerMenu {
+    public final SynthesizerBlockEntity blockEntity;
     private final Level level;
     private final ContainerData data;
     private FluidStack fluidStack;
 
-    public MetalizerMenu(int id, Inventory inventory, FriendlyByteBuf extraData) {
+    public SynthesizerMenu(int id, Inventory inventory, FriendlyByteBuf extraData) {
         this(id, inventory, inventory.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
-    public MetalizerMenu(int id, Inventory inventory, BlockEntity blockEntity, ContainerData data) {
-        super(MenuTypeInit.METALIZER_MENU.get(), id);
+    public SynthesizerMenu(int id, Inventory inventory, BlockEntity blockEntity, ContainerData data) {
+        super(MenuTypeInit.SYNTHESIZER_MENU.get(), id);
         checkContainerSize(inventory, 3);
-        this.blockEntity = (MetalizerBlockEntity) blockEntity;
+        this.blockEntity = (SynthesizerBlockEntity) blockEntity;
         this.level = inventory.player.level;
         this.data = data;
         this.fluidStack = this.blockEntity.getFluidStack();
@@ -127,7 +126,7 @@ public class MetalizerMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                player, BlockInit.METALIZER.get());
+                player, BlockInit.SYNTHESIZER.get());
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

@@ -1,8 +1,7 @@
 package dev.coln.sonicit.block.entity;
 
 import dev.coln.sonicit.init.BlockEntityInit;
-import dev.coln.sonicit.recipe.MetalizerRecipe;
-import dev.coln.sonicit.screen.MetalizerMenu;
+import dev.coln.sonicit.recipe.SynthesizerRecipe;
 import dev.coln.sonicit.screen.SonicCustomizerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -144,8 +142,8 @@ public class SonicCustomizerBlockEntity extends BlockEntity implements MenuProvi
             inventory.setItem(i, blockEntity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<MetalizerRecipe> recipe = level.getRecipeManager()
-                .getRecipeFor(MetalizerRecipe.Type.INSTANCE, inventory, level);
+        Optional<SynthesizerRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(SynthesizerRecipe.Type.INSTANCE, inventory, level);
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleContainer inventory) {

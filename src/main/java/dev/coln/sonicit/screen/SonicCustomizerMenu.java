@@ -1,6 +1,5 @@
 package dev.coln.sonicit.screen;
 
-import dev.coln.sonicit.block.entity.MetalizerBlockEntity;
 import dev.coln.sonicit.block.entity.SonicCustomizerBlockEntity;
 import dev.coln.sonicit.init.BlockInit;
 import dev.coln.sonicit.init.MenuTypeInit;

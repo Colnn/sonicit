@@ -1,7 +1,7 @@
 package dev.coln.sonicit.integration;
 
 import dev.coln.sonicit.SonicIt;
-import dev.coln.sonicit.recipe.MetalizerRecipe;
+import dev.coln.sonicit.recipe.SynthesizerRecipe;
 import dev.coln.sonicit.recipe.SonicWorkbenchRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -20,8 +20,8 @@ public class JEISonicItPlugin implements IModPlugin {
     public static RecipeType<SonicWorkbenchRecipe> SONIC_TYPE =
             new RecipeType<>(SonicWorkbenchRecipeCategory.UID, SonicWorkbenchRecipe.class);
 
-    public static RecipeType<MetalizerRecipe> METALIZER_TYPE =
-            new RecipeType<>(MetalizerRecipeCategory.UID, MetalizerRecipe.class);
+    public static RecipeType<SynthesizerRecipe> SYNTHESIZER_TYPE =
+            new RecipeType<>(SynthesizerRecipeCategory.UID, SynthesizerRecipe.class);
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -33,7 +33,7 @@ public class JEISonicItPlugin implements IModPlugin {
         registration.addRecipeCategories(new
                 SonicWorkbenchRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new
-                MetalizerRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+                SynthesizerRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class JEISonicItPlugin implements IModPlugin {
         RecipeManager rm = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
         List<SonicWorkbenchRecipe> recipesSonic = rm.getAllRecipesFor(SonicWorkbenchRecipe.Type.INSTANCE);
         registration.addRecipes(SONIC_TYPE, recipesSonic);
-        List<MetalizerRecipe> recipesMetalizer = rm.getAllRecipesFor(MetalizerRecipe.Type.INSTANCE);
-        registration.addRecipes(METALIZER_TYPE, recipesMetalizer);
+        List<SynthesizerRecipe> recipesSynthesizer = rm.getAllRecipesFor(SynthesizerRecipe.Type.INSTANCE);
+        registration.addRecipes(SYNTHESIZER_TYPE, recipesSynthesizer);
     }
 }

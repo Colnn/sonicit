@@ -1,7 +1,7 @@
 package dev.coln.sonicit.init;
 
 import dev.coln.sonicit.SonicIt;
-import dev.coln.sonicit.recipe.MetalizerRecipe;
+import dev.coln.sonicit.recipe.SynthesizerRecipe;
 import dev.coln.sonicit.recipe.SonicWorkbenchRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -17,8 +17,8 @@ public class RecipeInit {
     public static final RegistryObject<RecipeSerializer<SonicWorkbenchRecipe>> SONIC_WORKBENCH_SERIALIZER =
             SERIALIZERS.register("sonic_workbench", () -> SonicWorkbenchRecipe.Serializer.INSTANCE);
 
-    public static final RegistryObject<RecipeSerializer<MetalizerRecipe>> METALIZER_SERIALIZER =
-            SERIALIZERS.register("metalizer", () -> MetalizerRecipe.Serializer.INSTANCE);
+    public static final RegistryObject<RecipeSerializer<SynthesizerRecipe>> SYNTHESIZER_SERIALIZER =
+            SERIALIZERS.register("synthesizer", () -> SynthesizerRecipe.Serializer.INSTANCE);
 
     public static void register(IEventBus eventBus) {
         SERIALIZERS.register(eventBus);

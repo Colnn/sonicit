@@ -1,7 +1,7 @@
 package dev.coln.sonicit.init;
 
 import dev.coln.sonicit.SonicIt;
-import dev.coln.sonicit.block.custom.MetalizerBlock;
+import dev.coln.sonicit.block.custom.SynthesizerBlock;
 import dev.coln.sonicit.block.custom.SonicCustomizerBlock;
 import dev.coln.sonicit.block.custom.SonicWorkbenchBlock;
 import net.minecraft.world.item.BlockItem;
@@ -15,7 +15,6 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import java.util.Properties;
 import java.util.function.Supplier;
 
 public class BlockInit {
@@ -26,8 +25,8 @@ public class BlockInit {
             () -> new SonicWorkbenchBlock(BlockBehaviour.Properties.of(Material.METAL)
                     .strength(6f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
 
-    public static final RegistryObject<Block> METALIZER = registerBlock("metalizer",
-            () -> new MetalizerBlock(BlockBehaviour.Properties.of(Material.METAL)
+    public static final RegistryObject<Block> SYNTHESIZER = registerBlock("synthesizer",
+            () -> new SynthesizerBlock(BlockBehaviour.Properties.of(Material.METAL)
                     .strength(6f).requiresCorrectToolForDrops().noOcclusion()), SonicIt.ModCreativeTab.instance);
 
     public static final RegistryObject<Block> SONIC_CUSTOMIZER = registerBlock("sonic_customizer",

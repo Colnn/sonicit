@@ -14,11 +14,11 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.Optional;
 
-public class MetalizerScreen extends AbstractContainerScreen<MetalizerMenu> {
+public class SynthesizerScreen extends AbstractContainerScreen<SynthesizerMenu> {
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(SonicIt.MOD_ID, "textures/gui/metalizer_gui.png");
+            new ResourceLocation(SonicIt.MOD_ID, "textures/gui/synthesizer_gui.png");
     private FluidTankRenderer renderer;
-    public MetalizerScreen(MetalizerMenu menu, Inventory inventory, Component component) {
+    public SynthesizerScreen(SynthesizerMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
     }
 

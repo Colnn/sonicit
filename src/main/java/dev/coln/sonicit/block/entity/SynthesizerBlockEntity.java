@@ -3,8 +3,8 @@ package dev.coln.sonicit.block.entity;
 import dev.coln.sonicit.init.BlockEntityInit;
 import dev.coln.sonicit.networking.ModMessages;
 import dev.coln.sonicit.networking.packet.FluidSyncS2CPacket;
-import dev.coln.sonicit.recipe.MetalizerRecipe;
-import dev.coln.sonicit.screen.MetalizerMenu;
+import dev.coln.sonicit.recipe.SynthesizerRecipe;
+import dev.coln.sonicit.screen.SynthesizerMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
+public class SynthesizerBlockEntity extends BlockEntity implements MenuProvider {
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
         @Override
@@ -87,16 +87,16 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
     private int lava = 0;
     private int maxLava = 100;
 
-    public MetalizerBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntityInit.METALIZER.get(), pos, state);
+    public SynthesizerBlockEntity(BlockPos pos, BlockState state) {
+        super(BlockEntityInit.SYNTHESIZER.get(), pos, state);
         this.data = new ContainerData() {
             @Override
             public int get(int index) {
                 return switch (index) {
-                    case 0 -> MetalizerBlockEntity.this.progress;
-                    case 1 -> MetalizerBlockEntity.this.maxProgress;
-                    case 2 -> MetalizerBlockEntity.this.lava;
-                    case 3 -> MetalizerBlockEntity.this.maxLava;
+                    case 0 -> SynthesizerBlockEntity.this.progress;
+                    case 1 -> SynthesizerBlockEntity.this.maxProgress;
+                    case 2 -> SynthesizerBlockEntity.this.lava;
+                    case 3 -> SynthesizerBlockEntity.this.maxLava;
                     default -> 0;
                 };
             }
@@ -104,10 +104,10 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
             @Override
             public void set(int index, int value) {
                 switch(index) {
-                    case 0 -> MetalizerBlockEntity.this.progress = value;
-                    case 1 -> MetalizerBlockEntity.this.maxProgress = value;
-                    case 2 -> MetalizerBlockEntity.this.lava = value;
-                    case 3 -> MetalizerBlockEntity.this.maxLava = value;
+                    case 0 -> SynthesizerBlockEntity.this.progress = value;
+                    case 1 -> SynthesizerBlockEntity.this.maxProgress = value;
+                    case 2 -> SynthesizerBlockEntity.this.lava = value;
+                    case 3 -> SynthesizerBlockEntity.this.maxLava = value;
                 }
             }
 
@@ -120,13 +120,13 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public Component getDisplayName() {
-        return Component.literal("Metalizer");
+        return Component.literal("Synthesizer");
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
-        return new MetalizerMenu(id, inventory, this, this.data);
+        return new SynthesizerMenu(id, inventory, this, this.data);
     }
 
     @Override
@@ -159,7 +159,7 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     protected void saveAdditional(CompoundTag compoundTag) {
         compoundTag.put("inventory", itemHandler.serializeNBT());
-        compoundTag.putInt("metalizer.progress", this.progress);
+        compoundTag.putInt("synthesizer.progress", this.progress);
         compoundTag = FLUID_TANK.writeToNBT(compoundTag);
 
         super.saveAdditional(compoundTag);
@@ -169,7 +169,7 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
     public void load(CompoundTag compoundTag) {
         super.load(compoundTag);
         itemHandler.deserializeNBT(compoundTag.getCompound("inventory"));
-        progress = serializeNBT().getInt("metalizer.progress");
+        progress = serializeNBT().getInt("synthesizer.progress");
         FLUID_TANK.readFromNBT(compoundTag);
     }
 
@@ -182,7 +182,7 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, MetalizerBlockEntity blockEntity) {
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, SynthesizerBlockEntity blockEntity) {
         if(level.isClientSide()) {
             return;
         }
@@ -206,7 +206,7 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
 
     }
 
-    private static void transferItemFluidToFluidTank(MetalizerBlockEntity blockEntity) {
+    private static void transferItemFluidToFluidTank(SynthesizerBlockEntity blockEntity) {
         blockEntity.itemHandler.getStackInSlot(0).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).ifPresent(handler -> {
             int drainAmount = Math.min(blockEntity.FLUID_TANK.getSpace(), 1000);
 
@@ -218,22 +218,22 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
         });
     }
 
-    private static void fillTankWithFluid(MetalizerBlockEntity blockEntity, FluidStack stack, ItemStack container) {
+    private static void fillTankWithFluid(SynthesizerBlockEntity blockEntity, FluidStack stack, ItemStack container) {
         blockEntity.FLUID_TANK.fill(stack, IFluidHandler.FluidAction.EXECUTE);
 
         blockEntity.itemHandler.extractItem(0, 1, false);
         blockEntity.itemHandler.insertItem(0, container, false);
     }
 
-    private static boolean hasFluidItemInSourceSlot(MetalizerBlockEntity blockEntity) {
+    private static boolean hasFluidItemInSourceSlot(SynthesizerBlockEntity blockEntity) {
         return blockEntity.itemHandler.getStackInSlot(0).getCount() > 0;
     }
 
-    private static boolean hasEnoughLava(MetalizerBlockEntity blockEntity) {
+    private static boolean hasEnoughLava(SynthesizerBlockEntity blockEntity) {
         return blockEntity.FLUID_TANK.getFluidAmount() >= LAVA_REQ * blockEntity.maxProgress;
     }
 
-    private static void extractLava(MetalizerBlockEntity blockEntity) {
+    private static void extractLava(SynthesizerBlockEntity blockEntity) {
         blockEntity.FLUID_TANK.drain(LAVA_REQ, IFluidHandler.FluidAction.EXECUTE);
     }
 
@@ -241,15 +241,15 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
         this.progress = 0;
     }
 
-    private static void craftItem(MetalizerBlockEntity blockEntity) {
+    private static void craftItem(SynthesizerBlockEntity blockEntity) {
         Level level = blockEntity.level;
         SimpleContainer inventory = new SimpleContainer(blockEntity.itemHandler.getSlots());
         for (int i = 0; i < blockEntity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, blockEntity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<MetalizerRecipe> recipe = level.getRecipeManager()
-                .getRecipeFor(MetalizerRecipe.Type.INSTANCE, inventory, level);
+        Optional<SynthesizerRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(SynthesizerRecipe.Type.INSTANCE, inventory, level);
 
         if(hasRecipe(blockEntity)) {
             blockEntity.itemHandler.extractItem(1, 1, false);
@@ -260,15 +260,15 @@ public class MetalizerBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
 
-    private static boolean hasRecipe(MetalizerBlockEntity blockEntity) {
+    private static boolean hasRecipe(SynthesizerBlockEntity blockEntity) {
         Level level = blockEntity.level;
         SimpleContainer inventory = new SimpleContainer(blockEntity.itemHandler.getSlots());
         for (int i = 0; i < blockEntity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, blockEntity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<MetalizerRecipe> recipe = level.getRecipeManager()
-                .getRecipeFor(MetalizerRecipe.Type.INSTANCE, inventory, level);
+        Optional<SynthesizerRecipe> recipe = level.getRecipeManager()
+                .getRecipeFor(SynthesizerRecipe.Type.INSTANCE, inventory, level);
 
 
         return recipe.isPresent() && canInsertAmountIntoOutputSlot(inventory) &&

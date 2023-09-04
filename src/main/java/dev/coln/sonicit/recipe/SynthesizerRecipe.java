@@ -13,12 +13,12 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class MetalizerRecipe implements Recipe<SimpleContainer> {
+public class SynthesizerRecipe implements Recipe<SimpleContainer> {
     private final ResourceLocation id;
     private final ItemStack output;
     private final NonNullList<Ingredient> recipeItems;
 
-    public MetalizerRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems) {
+    public SynthesizerRecipe(ResourceLocation id, ItemStack output, NonNullList<Ingredient> recipeItems) {
         this.id = id;
         this.output = output;
         this.recipeItems = recipeItems;
@@ -68,19 +68,19 @@ public class MetalizerRecipe implements Recipe<SimpleContainer> {
         return Type.INSTANCE;
     }
 
-    public static class Type implements RecipeType<MetalizerRecipe> {
+    public static class Type implements RecipeType<SynthesizerRecipe> {
         private Type() { }
         public static final Type INSTANCE = new Type();
-        public static final String ID = "metalizer";
+        public static final String ID = "synthesizer";
     }
 
-    public static class Serializer implements RecipeSerializer<MetalizerRecipe> {
+    public static class Serializer implements RecipeSerializer<SynthesizerRecipe> {
         public static final Serializer INSTANCE = new Serializer();
         public static final ResourceLocation ID =
-                new ResourceLocation(SonicIt.MOD_ID, "metalizer");
+                new ResourceLocation(SonicIt.MOD_ID, "synthesizer");
 
         @Override
-        public MetalizerRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
+        public SynthesizerRecipe fromJson(ResourceLocation pRecipeId, JsonObject pSerializedRecipe) {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(pSerializedRecipe, "output"));
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(pSerializedRecipe, "ingredients");
@@ -90,11 +90,11 @@ public class MetalizerRecipe implements Recipe<SimpleContainer> {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new MetalizerRecipe(pRecipeId, output, inputs);
+            return new SynthesizerRecipe(pRecipeId, output, inputs);
         }
 
         @Override
-        public @Nullable MetalizerRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
+        public @Nullable SynthesizerRecipe fromNetwork(ResourceLocation pRecipeId, FriendlyByteBuf pBuffer) {
             NonNullList<Ingredient> inputs = NonNullList.withSize(pBuffer.readInt(), Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
@@ -102,11 +102,11 @@ public class MetalizerRecipe implements Recipe<SimpleContainer> {
             }
 
             ItemStack output = pBuffer.readItem();
-            return new MetalizerRecipe(pRecipeId, output, inputs);
+            return new SynthesizerRecipe(pRecipeId, output, inputs);
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf pBuffer, MetalizerRecipe pRecipe) {
+        public void toNetwork(FriendlyByteBuf pBuffer, SynthesizerRecipe pRecipe) {
             pBuffer.writeInt(pRecipe.getIngredients().size());
 
             for (Ingredient ing : pRecipe.getIngredients()) {

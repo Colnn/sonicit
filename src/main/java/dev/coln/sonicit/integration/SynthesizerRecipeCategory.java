@@ -2,8 +2,7 @@ package dev.coln.sonicit.integration;
 
 import dev.coln.sonicit.SonicIt;
 import dev.coln.sonicit.init.BlockInit;
-import dev.coln.sonicit.recipe.MetalizerRecipe;
-import dev.coln.sonicit.recipe.SonicWorkbenchRecipe;
+import dev.coln.sonicit.recipe.SynthesizerRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,31 +13,29 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 
-public class MetalizerRecipeCategory implements IRecipeCategory<MetalizerRecipe> {
-    public final static ResourceLocation UID = new ResourceLocation(SonicIt.MOD_ID, "metalizer");
-    public final static ResourceLocation TEXTURE = new ResourceLocation(SonicIt.MOD_ID, "textures/gui/metalizer_jei.png");
+public class SynthesizerRecipeCategory implements IRecipeCategory<SynthesizerRecipe> {
+    public final static ResourceLocation UID = new ResourceLocation(SonicIt.MOD_ID, "synthesizer");
+    public final static ResourceLocation TEXTURE = new ResourceLocation(SonicIt.MOD_ID, "textures/gui/synthesizer_jei.png");
 
     private final IDrawable background;
     private final IDrawable icon;
 
-    public MetalizerRecipeCategory(IGuiHelper helper) {
+    public SynthesizerRecipeCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(TEXTURE, 0, 0, 176, 90);
-        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockInit.METALIZER.get()));
+        this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(BlockInit.SYNTHESIZER.get()));
     }
 
     @Override
-    public RecipeType<MetalizerRecipe> getRecipeType() {
-        return JEISonicItPlugin.METALIZER_TYPE;
+    public RecipeType<SynthesizerRecipe> getRecipeType() {
+        return JEISonicItPlugin.SYNTHESIZER_TYPE;
     }
 
     @Override
     public Component getTitle() {
-        return Component.literal("Metalizer");
+        return Component.literal("Synthesizer");
     }
 
     @Override
@@ -52,7 +49,7 @@ public class MetalizerRecipeCategory implements IRecipeCategory<MetalizerRecipe>
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, MetalizerRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, SynthesizerRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(RecipeIngredientRole.RENDER_ONLY, 9, 20).addItemStack(new ItemStack(Items.LAVA_BUCKET));
         builder.addSlot(RecipeIngredientRole.INPUT, 93, 11).addIngredients(recipe.getIngredients().get(0));
 

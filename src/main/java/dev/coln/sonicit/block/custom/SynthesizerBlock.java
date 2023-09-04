@@ -1,7 +1,6 @@
 package dev.coln.sonicit.block.custom;
 
-import dev.coln.sonicit.block.entity.MetalizerBlockEntity;
-import dev.coln.sonicit.block.entity.MetalizerBlockEntity;
+import dev.coln.sonicit.block.entity.SynthesizerBlockEntity;
 import dev.coln.sonicit.init.BlockEntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,8 +18,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
-public class MetalizerBlock extends BaseEntityBlock {
-    public MetalizerBlock(Properties properties) { super(properties); }
+public class SynthesizerBlock extends BaseEntityBlock {
+    public SynthesizerBlock(Properties properties) { super(properties); }
 
     /* BLOCK ENTITY */
 
@@ -33,8 +32,8 @@ public class MetalizerBlock extends BaseEntityBlock {
     public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState blockState1, boolean isMoving) {
         if(blockState.getBlock() != blockState1.getBlock()) {
             BlockEntity blockEntity = level.getBlockEntity(blockPos);
-            if(blockEntity instanceof MetalizerBlockEntity) {
-                ((MetalizerBlockEntity) blockEntity).drops();
+            if(blockEntity instanceof SynthesizerBlockEntity) {
+                ((SynthesizerBlockEntity) blockEntity).drops();
             }
         }
         super.onRemove(blockState, level, blockPos, blockState1, isMoving);
@@ -44,8 +43,8 @@ public class MetalizerBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
         if(!level.isClientSide()) {
             BlockEntity entity = level.getBlockEntity(blockPos);
-            if(entity instanceof MetalizerBlockEntity) {
-                NetworkHooks.openScreen((ServerPlayer) player, (MetalizerBlockEntity) entity, blockPos);
+            if(entity instanceof SynthesizerBlockEntity) {
+                NetworkHooks.openScreen((ServerPlayer) player, (SynthesizerBlockEntity) entity, blockPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
@@ -56,13 +55,13 @@ public class MetalizerBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new MetalizerBlockEntity(blockPos, blockState);
+        return new SynthesizerBlockEntity(blockPos, blockState);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, BlockEntityInit.METALIZER.get(),
-                MetalizerBlockEntity::tick);
+        return createTickerHelper(blockEntityType, BlockEntityInit.SYNTHESIZER.get(),
+                SynthesizerBlockEntity::tick);
     }
 }

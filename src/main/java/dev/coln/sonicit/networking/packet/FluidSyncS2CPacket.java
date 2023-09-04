@@ -1,7 +1,7 @@
 package dev.coln.sonicit.networking.packet;
 
-import dev.coln.sonicit.block.entity.MetalizerBlockEntity;
-import dev.coln.sonicit.screen.MetalizerMenu;
+import dev.coln.sonicit.block.entity.SynthesizerBlockEntity;
+import dev.coln.sonicit.screen.SynthesizerMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -32,10 +32,10 @@ public class FluidSyncS2CPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            if(Minecraft.getInstance().level.getBlockEntity(pos) instanceof MetalizerBlockEntity blockEntity) {
+            if(Minecraft.getInstance().level.getBlockEntity(pos) instanceof SynthesizerBlockEntity blockEntity) {
                 blockEntity.setFluid(this.fluidStack);
 
-                if(Minecraft.getInstance().player.containerMenu instanceof MetalizerMenu menu &&
+                if(Minecraft.getInstance().player.containerMenu instanceof SynthesizerMenu menu &&
                         menu.blockEntity.getBlockPos().equals(pos)) {
                     menu.setFluid(this.fluidStack);
                 }
