@@ -84,8 +84,6 @@ public class SynthesizerBlockEntity extends BlockEntity implements MenuProvider 
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 78;
-    private int lava = 0;
-    private int maxLava = 100;
 
     public SynthesizerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntityInit.SYNTHESIZER.get(), pos, state);
@@ -95,8 +93,6 @@ public class SynthesizerBlockEntity extends BlockEntity implements MenuProvider 
                 return switch (index) {
                     case 0 -> SynthesizerBlockEntity.this.progress;
                     case 1 -> SynthesizerBlockEntity.this.maxProgress;
-                    case 2 -> SynthesizerBlockEntity.this.lava;
-                    case 3 -> SynthesizerBlockEntity.this.maxLava;
                     default -> 0;
                 };
             }
@@ -106,8 +102,6 @@ public class SynthesizerBlockEntity extends BlockEntity implements MenuProvider 
                 switch(index) {
                     case 0 -> SynthesizerBlockEntity.this.progress = value;
                     case 1 -> SynthesizerBlockEntity.this.maxProgress = value;
-                    case 2 -> SynthesizerBlockEntity.this.lava = value;
-                    case 3 -> SynthesizerBlockEntity.this.maxLava = value;
                 }
             }
 
