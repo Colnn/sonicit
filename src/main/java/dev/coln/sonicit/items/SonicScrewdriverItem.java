@@ -2,7 +2,7 @@ package dev.coln.sonicit.items;
 
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.networking.ModMessages;
-import dev.coln.sonicit.networking.packet.ExtendSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.sonic.ExtendSonicC2SPacket;
 import dev.coln.sonicit.util.KeyboardHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;

@@ -1,4 +1,4 @@
-package dev.coln.sonicit.networking.packet;
+package dev.coln.sonicit.networking.packet.sonic;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;

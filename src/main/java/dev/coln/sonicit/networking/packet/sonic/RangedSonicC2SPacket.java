@@ -1,4 +1,4 @@
-package dev.coln.sonicit.networking.packet;
+package dev.coln.sonicit.networking.packet.sonic;
 
 import dev.coln.sonicit.init.ItemInit;
 import dev.coln.sonicit.networking.ModMessages;

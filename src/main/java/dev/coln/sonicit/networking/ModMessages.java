@@ -3,6 +3,7 @@ package dev.coln.sonicit.networking;
 import dev.coln.sonicit.SonicIt;
 import dev.coln.sonicit.networking.packet.*;
 import dev.coln.sonicit.networking.packet.customizer.CustomizeSonicC2SPacket;
+import dev.coln.sonicit.networking.packet.sonic.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
